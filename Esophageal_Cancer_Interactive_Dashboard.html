@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Esophageal Cancer Interactive Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js" defer></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #f4f6f8;
+            color: #263241;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        header { margin-bottom: 24px; text-align: center; }
+        h1 { margin: 0 0 6px; color: #24364b; font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.15; }
+        .subtitle { margin: 0; color: #667485; font-size: 1rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        .card {
+            min-width: 0;
+            min-height: 460px;
+            padding: 14px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #dfe5ec;
+            border-radius: 8px;
+            box-shadow: 0 8px 18px rgba(31, 45, 61, 0.06);
+        }
+        .full-width { grid-column: 1 / -1; }
+        .plotly-graph-div { width: 100%; height: 100%; min-height: 430px; }
+        @media (max-width: 900px) {
+            body { padding: 16px; }
+            .grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: auto; }
+            .card { min-height: 420px; }
+            .plotly-graph-div { min-height: 390px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Interactive Clinical Dashboard</h1>
+        <p class="subtitle">Esophageal Cancer Registry - Advanced Data Insights</p>
+    </header>
+    
+    <main class="grid">
+        <section class="card" aria-label="Patient phenotyping clusters">
+            <div id="39e28d90-fd76-4bc0-a282-ba878e42bc7b" class="plotly-graph-div"></div>
+        </section>
+        <section class="card" aria-label="Survival by stage and treatment sequence">
+            <div id="437223e8-4d29-4207-82b5-9b3578d2a93e" class="plotly-graph-div"></div>
+        </section>
+        <section class="card full-width" aria-label="Independent mortality risk hazard ratios">
+            <div id="fa389625-8f4d-4cbe-a60c-ee7ad00ea1b0" class="plotly-graph-div"></div>
+        </section>
+        <section class="card" aria-label="Random forest feature importance">
+            <div id="45c320e4-f12f-488f-a733-4f7fa5ec9ba7" class="plotly-graph-div"></div>
+        </section>
+    </main>
+    <script src="esophageal_dashboard_assets/dashboard-plots.js" defer></script>
+</body>
+</html>

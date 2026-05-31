@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Clinical Report</title>
+<style>
+    @page { size: A4; margin: 20mm; background: #ffffff; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        color: #2b2b2b;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 11pt;
+        line-height: 1.6;
+        background: #ffffff;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    main { max-width: 190mm; margin: 0 auto; }
+    .cover-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; break-after: page; }
+    .cover-title { font-size: 32pt; font-weight: 800; color: #1a365d; margin-bottom: 20px; border-bottom: 4px solid #3182ce; padding-bottom: 20px; }
+    .cover-subtitle { font-size: 16pt; color: #4a5568; }
+    .cover-date { margin-top: 50px; font-size: 12pt; color: #718096; }
+    h1 { color: #2c5282; font-size: 20pt; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 30px; break-after: avoid; }
+    h2 { color: #2b6cb0; font-size: 14pt; margin-top: 20px; }
+    p { text-align: justify; margin-bottom: 15px; color: #3d3d3d; }
+    .plot-container { margin: 25px 0; text-align: center; break-inside: avoid; }
+    .plot-container img { display: block; width: 100%; height: auto; border: 1px solid #e2e8f0; border-radius: 6px; }
+    .caption { font-size: 9pt; color: #718096; font-style: italic; margin-top: 8px; }
+    .highlight-box { background-color: #ebf8ff; border-left: 5px solid #3182ce; padding: 15px; margin: 20px 0; border-radius: 0 6px 6px 0; break-inside: avoid; }
+    .highlight-box h3 { margin: 0 0 10px 0; color: #2c5282; font-size: 12pt; }
+    @media screen {
+        body { padding: 24px; }
+        main { max-width: 900px; }
+    }
+    @media (max-width: 640px) {
+        body { padding: 16px; font-size: 10.5pt; }
+        .cover-title { font-size: 24pt; }
+        .cover-subtitle { font-size: 13pt; }
+    }
+</style>
+</head>
+<body>
+
+<main>
+<header class="cover-page">
+    <div class="cover-title">Executive Clinical Report</div>
+    <div class="cover-subtitle">Esophageal Cancer Registry Analysis:<br>From Unsupervised Phenotyping to Surgical Quality</div>
+    <div class="cover-date">Comprehensive Analytical Review</div>
+</header>
+
+<h1>1. Treatment Modalities & Sequencing Dynamics</h1>
+<p>The sequence of clinical interventions—Surgery, Chemotherapy, and Radiotherapy—dictates stage-specific outcomes. By analyzing the precise timelines of the patient cohort, we separated the data into distinct treatment pathways: Adjuvant (Surgery first), Neoadjuvant (Chemo/RT first), Definitive Chemo/RT, and Surgery Only.</p>
+<figure class="plot-container">
+    <img src="report_professional_assets/survival-by-sequence.png" width="3282" height="1407" decoding="async" alt="Survival by Sequence">
+    <figcaption class="caption">Figure 1: Overall survival (logarithmic scale) stratified by clinical stage and treatment sequencing strategy.</figcaption>
+</figure>
+<div class="highlight-box">
+    <h3>Key Clinical Insight: Stage 3 Management</h3>
+    <p>For Stage 3 tumors, <strong>Adjuvant Therapy</strong> (Surgery first, median survival 623 days) statistically outperformed <strong>Neoadjuvant Therapy</strong> (Chemo/RT first, median survival 527 days). Relying solely on definitive Chemo/RT without surgical intervention resulted in a significant survival drop to 375 days.</p>
+</div>
+
+<h1>2. Independent Parameter Impact (Hazard Ratios)</h1>
+<p>To eliminate confounding variables (e.g., older patients receiving less aggressive treatments), a Cox Proportional Hazards Model was utilized. This model isolates each parameter to determine its exact, independent impact on the patient's risk of mortality.</p>
+<figure class="plot-container">
+    <img src="report_professional_assets/hazard-ratios.png" width="2670" height="1465" decoding="async" alt="Hazard Ratios">
+    <figcaption class="caption">Figure 2: Forest plot detailing the Hazard Ratio (HR) of baseline and treatment parameters. Values &lt;1 indicate a reduction in mortality risk (protective), while values &gt;1 indicate an increased risk of mortality.</figcaption>
+</figure>
+<p>The statistical output definitively proves that surgical intervention is the most protective independent action (HR 0.27, representing a 73% reduction in relative risk). Conversely, presenting at an advanced stage (Stage 3/4) is the strongest negative driver, independently increasing mortality risk by 121% (HR 2.21).</p>
+<div class="highlight-box">
+    <h3>The Lifestyle Paradox</h3>
+    <p>While being an active smoker at diagnosis independently increases the risk of mortality by 14% (HR 1.14), age stratification revealed an underlying "accelerated aging" effect. Smoking and Betel Nut usage trigger esophageal cancer nearly 7 years prematurely compared to non-users, artificially skewing their initial physiological resilience.</p>
+</div>
+
+<h1>3. Surgical Quality Indicators</h1>
+<p>For patients undergoing operative resection, institutional treatment quality was evaluated against modern surgical oncology Key Performance Indicators (KPIs).</p>
+
+<h2>Lymph Node Ratio (LNR)</h2>
+<p>The sheer number of positive lymph nodes is heavily influenced by how many nodes the surgeon removes. The Lymph Node Ratio (LNR) adjusts for operative yield. Maintaining an LNR below 0.2 (Low Burden) resulted in a median survival of 701 days, while an LNR above 0.2 triggered a drop in survival to 384 days.</p>
+<figure class="plot-container">
+    <img src="report_professional_assets/lnr-survival.png" width="2113" height="1176" decoding="async" alt="LNR Survival">
+    <figcaption class="caption">Figure 3: Survival distribution dependent on the pathological Lymph Node Ratio (LNR).</figcaption>
+</figure>
+
+<h2>Pathological Complete Response (pCR) & Margins</h2>
+<p>Among patients receiving Neoadjuvant therapy, 4.1% achieved a Pathological Complete Response (pCR), which doubled their median survival to 859 days. Furthermore, surgical precision remains paramount: achieving an R0 (Negative Margin) clearance yielded a median survival of 825 days, compared to 691 days for R1/R2 positive margins.</p>
+
+<h1>Conclusion</h1>
+<p>Survival within this registry is optimized through a triad of early detection, optimal sequencing (favoring upfront surgery when operable), and strict adherence to surgical quality metrics (LNR &lt; 0.2, R0 margin). Population-level interventions against smoking and betel nut remain critical to reversing the 7-year accelerated onset of the disease.</p>
+
+</main>
+</body>
+</html>
