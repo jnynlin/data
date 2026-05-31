@@ -1,0 +1,10 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	worktree = /mnt/chromeos/MyFiles/Downloads
+	symlinks = false
+[user]
+	name = Codex
+	email = codex@example.local
