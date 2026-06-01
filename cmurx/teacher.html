@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zodiac Ops Center | v5.2 Hybrid Pro Max</title>
+    <title>Zodiac Ops Center | v5.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3.4.19/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -486,7 +486,13 @@ const parseRosterInput = (rawText) => {
     }).filter(x => x !== null);
 };
 
-const generateSessionId = () => `${new Date().getFullYear()}${String(new Date().getMonth()+1).padStart(2,'0')}${String(new Date().getDate()).padStart(2,'0')}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
+const generateSessionId = () => {
+    const arr = new Uint32Array(1);
+    crypto.getRandomValues(arr);
+    const suffix = arr[0].toString(36).toUpperCase().padStart(7,'0').slice(-4);
+    const d = new Date();
+    return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${suffix}`;
+};
 
 const SCORE_CONFIG = {
     BASE: { CALIBRATION: 5, DEBRIEF: 10, ASSIGNMENT: 15, GALLERY: 15 },
@@ -639,7 +645,7 @@ function useRoster(sessionId, students, addToast) {
 
     const revokeToken = (uid, name) => { 
         if(confirm(`確定要強制登出 ${name} 嗎？\n(這會同時清空他的 4 位數 PIN 碼，讓他可以重新設定)`)) { 
-            update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: false, token: null, pin: null }); 
+            update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: false, token: null, pin: null, failedAttempts: 0, lockUntil: null });
             update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}`), { status: 'offline' }); 
             addToast("已強制登出並清空密碼", "success", "fa-solid fa-unlock-keyhole"); 
         } 

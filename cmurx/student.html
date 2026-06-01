@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Student Portal | v5.7 Rigorous Security</title>
+    <title>Student Portal | v5.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3.4.19/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -581,22 +581,34 @@ function useIdentity(sessionId, addToast, changeView, playSFX) {
         } catch (e) { addToast("搜尋失敗", "error"); } finally { loading.value = false; }
     };
 
-    // 💡 嚴密鎖定邏輯：強制檢查 4 位數字
     const executeClaim = async (pin) => {
-        const pinRegex = /^\d{4}$/; 
-        if (!pinRegex.test(pin)) {
+        if (!/^\d{4}$/.test(pin)) {
             addToast("請設置 4 位純數字 PIN 碼", "error", "fa-solid fa-keyboard");
             return false;
         }
-        
         loading.value = true;
         try {
             const uid = claimingUser.value.uid;
             const aS = await get(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`));
             const aD = aS.val() || {};
-            if (aD.pin && aD.pin !== pin) { addToast("PIN 錯誤", "error"); return false; }
+            if (aD.lockUntil && Date.now() < aD.lockUntil) {
+                const secs = Math.ceil((aD.lockUntil - Date.now()) / 1000);
+                addToast(`帳號鎖定中，請等待 ${secs} 秒`, "error", "fa-solid fa-lock");
+                return false;
+            }
+            if (aD.pin && aD.pin !== pin) {
+                const attempts = (aD.failedAttempts || 0) + 1;
+                if (attempts >= 5) {
+                    await update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { failedAttempts: 0, lockUntil: Date.now() + 5 * 60 * 1000 });
+                    addToast("連續錯誤 5 次，帳號鎖定 5 分鐘", "error", "fa-solid fa-lock");
+                } else {
+                    await update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { failedAttempts: attempts });
+                    addToast(`PIN 錯誤（${attempts}/5 次）`, "error");
+                }
+                return false;
+            }
             const t = crypto.randomUUID();
-            await update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: true, token: t, pin: pin });
+            await update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: true, token: t, pin, failedAttempts: 0, lockUntil: null });
             const ud = { uid, token: t, name: claimingUser.value.profile.Name, zodiac: claimingUser.value.profile.Zodiac, studentId: claimingUser.value.profile.StudentId, role: claimingUser.value.profile.Role || 'member' };
             localStorage.setItem('zodiac_identity', JSON.stringify(ud));
             Object.assign(myProfile, ud); myProfile.zodiac = CONFIG.ZODIAC.find(z=>z.label===ud.zodiac);
