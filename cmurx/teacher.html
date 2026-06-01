@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zodiac Ops Center | v5.3</title>
+    <title>Zodiac Ops Center | v5.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3.4.19/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -645,7 +645,7 @@ function useRoster(sessionId, students, addToast) {
 
     const revokeToken = (uid, name) => { 
         if(confirm(`確定要強制登出 ${name} 嗎？\n(這會同時清空他的 4 位數 PIN 碼，讓他可以重新設定)`)) { 
-            update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: false, token: null, pin: null, failedAttempts: 0, lockUntil: null });
+            update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}/auth`), { isActive: false, token: null, pin: null, failedAttempts: 0, lockUntil: null, firebaseUid: null, loginAt: null });
             update(dbRef(db, `classrooms/${sessionId.value}/students/${uid}`), { status: 'offline' }); 
             addToast("已強制登出並清空密碼", "success", "fa-solid fa-unlock-keyhole"); 
         } 
