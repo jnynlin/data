@@ -499,9 +499,12 @@ function useTasks(sessionId, myUid, globalState, myProfile, addToast, playSFX) {
             submitConfirmVisible.value = true;
             return;
         }
-        if (k === 'discussion' || (k === 'assignment' && globalState.config?.assignmentType === 'individual')) {
+        if (k === 'discussion' || k === 'assignment') {
             const idx = CONFIG.ZODIAC.findIndex(z => z.label === myProfile.zodiac?.label);
-            const s = await get(dbRef(db, `classrooms/${sessionId.value}/groupLinks/${idx}`));
+            const fbPath = k === 'assignment'
+                ? `classrooms/${sessionId.value}/assignmentLinks/${idx}`
+                : `classrooms/${sessionId.value}/groupLinks/${idx}`;
+            const s = await get(dbRef(db, fbPath));
             if (s.exists()) {
                 if(k === 'assignment') update(dbRef(db, `classrooms/${sessionId.value}/students/${myUid.value}/tasks/assignment`), { started: true, startTime: Date.now() });
                 if (popupWindow) popupWindow.location.href = s.val(); else window.open(s.val(), '_blank');
